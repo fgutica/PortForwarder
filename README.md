@@ -170,7 +170,7 @@ Execute the server executable to start the chatroom server
 
 Add an entry in the port forwarder to forward the chatroom clients to the chatroom server as outlined in the port forwarder usage. 
 
-1. To run a client, execute the ChatClient executable from any client machine on the network.![image alt text](image_6.png)
+1. To run a client, execute the ChatClient executable from any client machine on the network.![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_6.png)
 
 2. You will see a popup asking you for the host information of the chat server you wish to connect to: Enter the necessary credentials. 
 ![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_7.png)
@@ -221,7 +221,7 @@ Running the command **netstat -ant**, we can confirms that the forwarder is now 
 
 We configured one desktop to operate as the port forwarder, two other desktops to act as clients and three more desktops to act as the various servers specified in the rules above. The configuration results in the network diagram below:
 
- ![image alt text](image_12.png)
+ ![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_12.png)
 
 ## **Test Case #1 - Encryption on SSL Echo Server**
 
@@ -293,7 +293,7 @@ In order to get a sense of how well the port forwarder performs load balancing u
 
 ![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_27.png)
 
-After running the client, we see that the forwarder sends 10000 connections to the first server on 192.168.0.17![image alt text](image_28.png)
+After running the client, we see that the forwarder sends 10000 connections to the first server on 192.168.0.17![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_28.png)
 
 10000 connections are also sent to the second server on 192.168.0.21.
 
