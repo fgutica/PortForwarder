@@ -1,0 +1,115 @@
+﻿extends layout
+
+block content
+  
+  .container
+    h1= title
+    p Welcome to #{title}
+    
+    
+    table#example.display(cellspacing='0', width='100%')
+     
+    button#add-entry.btn.btn-default(type='button') Add Entry
+    
+    button#delete-selected.btn.btn-default(type='button') Delete Selected
+
+
+  #myModalNorm.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true', data-backdrop="")
+    .modal-dialog
+      .modal-content
+        // Modal Header
+        .modal-header
+          button.close(type='button', data-dismiss='modal')
+            span(aria-hidden='true') ×
+            span.sr-only Close
+          h4#myModalLabel.modal-title
+            | Add new forwarding entry
+        // Modal Body
+        .modal-body
+          form#addEntryForm(role='form', action="/addEntry", method="post")
+            .form-group
+              label(for='name') Application Name
+              input#input-name.form-control(type='text', name="name", placeholder='Enter name')
+            .form-group
+              label(for='input-sourcePort') Source Port
+              input#input-sourcePort.form-control(type='text', name="sourcePort", placeholder='Source Port')
+            .form-group
+              label(for='input-destinationIP') Destination IP
+              input#input-destinationIP.form-control(type='text',  name="destinationIP", placeholder='Destination IP')
+            .form-group
+              label(for='input-destinationPort') Destination Port
+              input#input-destinationPort.form-control(type='text',  name="destinationPort", placeholder='Destination Port')
+            button.btn.btn-default(type='submit') Submit
+        // Modal Footer
+  
+  script.
+    $(document).ready(function() {
+        var entries = JSON.parse('!{entries}');
+        
+        console.log(entries);
+      
+        $('#add-entry').click(function() {
+          $('#myModalNorm').modal("toggle");
+        });
+      
+      
+        var table = $('#example').DataTable({
+          data: entries,
+          columns: [
+            { title: "Application Name" },
+            { title: "Source Port" },
+            { title: "Destination IP" },
+            { title: "Destination Port"}
+          ]
+        });
+        
+        
+        $('#addEntryForm').submit(function(){
+          $.ajax({
+            url: $('#addEntryForm').attr('action'),
+            type: "post",
+            data : $('#addEntryForm').serialize(),
+            success: function(data) {
+              console.log(data.name);
+              table.row.add( [
+                  data.name,
+                  data.sourcePort,
+                  data.destinationIP,
+                  data.destinationPort
+              ] ).draw();
+              $('#myModalNorm').modal("toggle");
+              location.reload();
+              }
+          });
+          return false;
+        });
+        
+        $('#example tbody').on( 'click', 'tr', function () {
+          if ( $(this).hasClass('selected') ) {
+              $(this).removeClass('selected');
+          }
+          else {
+              table.$('tr.selected').removeClass('selected');
+              $(this).addClass('selected');
+          }
+      } );
+      
+      $('#delete-selected').click( function () {
+          
+          table.row('.selected').remove().draw( false );
+          
+          console.log(table.data());
+          
+          $.ajax({
+            url: '/deleteEntry',
+            type: "post",
+            data : {entries: JSON.stringify(table.data())},
+            success: function(data) {
+              console.log(data);
+            }
+          });
+          
+      } );
+          
+    } );
+    
