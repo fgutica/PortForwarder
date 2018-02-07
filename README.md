@@ -44,13 +44,13 @@ The decision to use multiprocessing was done to maximize CPU utilization and avo
 
 Each process spawned by the forwarder listens/accepts connections on its specified port and forwards connection traffic between the client and forwarding destination specified in the .csv file. A high level view of the port forwarder is presented in the diagram below:
 
-![image alt text](image_0.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_0.png)
 
 When a client connects to a listening port opened by our forwarder, a socket is created to exchange data between the client and the port forwarder. To pass the data onto the server that handles the actual data processing, a second socket is created to exchange data between the port forwarder and the actual server. By passing packets back and forth between this socket pair, we allow clients to communicate to the server and vice versa without the client having to know the server’s real IP address.
 
 To handle forwarded connections in an efficient manner, each process overseeing a listening port consists of an epoll object that monitors for activity on every socket pair that representing a client/server connection. The relationship between socket pairs and their client/server connection is maintained in a connection table that is updated whenever new clients connect or existing clients disconnect normally or abnormally. When a socket has data ready to read, the process checks which side (client or server) the data came from, looks up the corresponding socket in the connection table and forwards the data using the socket. A state diagram summarizing the operating of each forwarding process is presented below:
 
-![image alt text](image_1.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_1.png)
 
 ## **SSL Echo Server**
 
@@ -60,7 +60,7 @@ To test the port forwarder’s performance when handling a large number of concu
 
 The server establishes SSL connections with clients and simply echos messages back from the client as it receives them. A state diagram of the SSL Echo Server’s behavior is presented below:
 
-![image alt text](image_2.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_2.png)
 
 As mentioned above, the client that interacts with the SSL Echo Server is based off the epoll client that we previously submitted for Assignment 2, so there is no change in its overall behaviour aside from the fact that is now uses SSL sockets to communicate with the server. The client functions by getting user input on the following parameters:
 
@@ -74,7 +74,7 @@ As mentioned above, the client that interacts with the SSL Echo Server is based 
 
 After obtaining input, it waits until all client connections have been established with the server before each client starts sending their message. With enough clients doing this concurrently, it should place a heavy load on the port forwarder. The state diagram of the SSL client’s behaviour is shown below:
 
-![image alt text](image_3.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_3.png)
 
 ## **Chatroom Server**
 
@@ -84,13 +84,13 @@ The client front end was implemented in Qt and written in c++
 
 ### **Server Design**
 
-![image alt text](image_4.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_4.png)
 
  
 
 ### **Client Design**
 
-# ![image alt text](image_5.png)
+# ![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_5.png)
 
 # **User Manual**
 
@@ -173,11 +173,11 @@ Add an entry in the port forwarder to forward the chatroom clients to the chatro
 1. To run a client, execute the ChatClient executable from any client machine on the network.![image alt text](image_6.png)
 
 2. You will see a popup asking you for the host information of the chat server you wish to connect to: Enter the necessary credentials. 
-![image alt text](image_7.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_7.png)
 
 3. Upon connection you will get notified in the chat section that you are now connected to the host: 
 
-	![image alt text](image_8.png)
+	![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_8.png)
 
 ## **Apache Web Server Setup**
 
@@ -209,15 +209,15 @@ The example above assumes that the port forwarder is running on 192.168.0.18 and
 
 To test our port forwarder, we configured it with the following rules using our web interface:
 
-![image alt text](image_9.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_9.png)
 
 In a separate terminal window, we can see that our port forwarder starting up:
 
-![image alt text](image_10.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_10.png)
 
 Running the command **netstat -ant**, we can confirms that the forwarder is now listening on all the specified ports
 
-![image alt text](image_11.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_11.png)
 
 We configured one desktop to operate as the port forwarder, two other desktops to act as clients and three more desktops to act as the various servers specified in the rules above. The configuration results in the network diagram below:
 
@@ -227,35 +227,35 @@ We configured one desktop to operate as the port forwarder, two other desktops t
 
 Before testing the port forwarder, we wanted to confirm that encryption is working on our SSL echo server. We first set up our non-SSL client/server from Assignment 2 and established a single session to the server as below:
 
-![image alt text](image_13.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_13.png)
 
 Using Wireshark to capture the session, we can see the message in plaintext in the packets:
 
-![image alt text](image_14.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_14.png)
 
 We then ran the SSL client/server with the same settings as above:
 
-![image alt text](image_15.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_15.png)
 
 A Wireshark capture of the session this time shows that the message is now scrambled, indicating that SSL is working on our client and server.
 
-![image alt text](image_16.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_16.png)
 
 ## **Test Case #2 - Forwarding Multiple Inbound Requests**
 
 For this test case, we used the SSL client to create 1000 client connections to our SSL echo server running as seen in the screenshot below:
 
-![image alt text](image_17.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_17.png)
 
 After running, the log file **client data - 1000.xlsx** was generated with information on all 1000 client sessions.
 
-![image alt text](image_18.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_18.png)
 
 In addition to running the SSL echo server the Chatroom server was also run simultaneously, hosting a chat session between both client PCs at 192.168.0.17 and 192.168.0.25. We observed that our chat session was able to proceed without any impact from the SSL echo server tests, as can be seen by the screenshots below:
 
-![image alt text](image_19.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_19.png)
 
-![image alt text](image_20.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_20.png)
 
 From these results, we can conclude that the forwarder can properly forward multiple inbound requests.
 
@@ -263,45 +263,45 @@ From these results, we can conclude that the forwarder can properly forward mult
 
 To test that the forwarder can forward traffic properly from client to server and vice versa, we established an SSH session over the port forwarder. The client PC has IP address 192.168.0.23 as seen below:
 
-![image alt text](image_21.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_21.png)
 
 From the terminal session below, note how SSH is accessed through the forwarder IP address at 192.168.0.18 but running the **ip a show eno1** command after connecting returns us the SSH server IP of 192.168.0.21.
 
-![image alt text](image_22.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_22.png)
 
 Because our SSH command returned us output from the server, we can conclude that our forwarder handles two-way traffic correctly. For additional evidence, see the Wireshark capture file **ssh session.pcapng **included with our submission.
 
-![image alt text](image_23.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_23.png)
 
 ## **Test Case #4 - ****Load Balancing, ****Low Load Conditions**
 
 To confirm that our port forwarder correctly functions as a load balancer, we set up two Apache web servers on IP addresses 192.168.0.17 and 192.168.0.21. From the client PC at 192.168.0.23 we used Firefox to access our test webpage using the port forwarder’s address and received the webpage from the first web server:
 
-![image alt text](image_24.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_24.png)
 
 Refreshing the webpage with CTRL + F5 to bypass the browser cache, we see that the webpage is now served from our second web server:
 
-![image alt text](image_25.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_25.png)
 
 The wireshark capture file **web server load balancing.pcapng** verifies the load balancing behaviour we observed above. If we filter the capture file to show only HTTP traffic, we see that the first HTTP GET request is received by the forwarder and then passed onto the server at 192.168.0.17. The subsequent GET is also received by the forwarder and passed onto the other web server at 192.168.0.21.
 
-![image alt text](image_26.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_26.png)
 
 ## **Test Case #5 - Load Balancing, Heavy Load Conditions**
 
 In order to get a sense of how well the port forwarder performs load balancing under heavy load, we used our Assignment 2 client/server code establish 20000 client connections to the port forwarder using the settings below:
 
-![image alt text](image_27.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_27.png)
 
 After running the client, we see that the forwarder sends 10000 connections to the first server on 192.168.0.17![image alt text](image_28.png)
 
 10000 connections are also sent to the second server on 192.168.0.21.
 
-![image alt text](image_29.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_29.png)
 
 The results file generated by our client shows that 771047 messages were sent to the server over 15 seconds with an average response time of 411 ms.
 
-![image alt text](image_30.png)
+![image alt text](https://github.com/roFilip/PortForwarder/blob/master/readme_imges/image_30.png)
 
 From these results, we can conclude that our port forwarder is able to handle a large number of connections successfully.
 
